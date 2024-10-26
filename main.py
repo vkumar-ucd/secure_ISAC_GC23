@@ -13,6 +13,7 @@ from fn_generate_channels import *
 from fn_find_initial_points import *
 from fn_maximize_BPG import *
 from fn_obj_calc import *
+from fn_print_status import *
 import matplotlib.pyplot as plt
 
 np.random.seed(0)
@@ -50,7 +51,7 @@ def main():
     else:
         relative_change = 1e3  # arbitrary large number
         true_BPG = []
-        print("Maximizing beampattern gain", end='')
+        # print("Maximizing beampattern gain", end='')
         while relative_change > sp.epsilon:
             sys.stdout.write('\rMaximizing beampattern gain ' + next(cursor_symbols))
             sys.stdout.flush()
@@ -64,6 +65,10 @@ def main():
             if len(true_BPG) > 10:
                 relative_change = abs(true_BPG[-1] - true_BPG[-2]) / true_BPG[-2]
 
+        # print constraint status
+        print_status(sp, channels, xTildeCurrent, thetaVecCurrent)
+
+        # plot the convergence sequence
         plt.plot(np.arange(len(true_BPG)), true_BPG)
         plt.xlabel('Iteration number')
         plt.ylabel('Instantaneous beampattern gain')
